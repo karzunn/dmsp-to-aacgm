@@ -7,5 +7,5 @@ A CLI tool to convert geomagnetic coordinates in DMSP data files to AACGM coordi
 
 ## Usage
 
-```dmsp-to-aacgm <input file> <optional output directory>```
-```dmsp-to-aacgm <input directory> <optional output directory>```
+- ```dmsp-to-aacgm <input file> <optional output directory>```
+- ```dmsp-to-aacgm <input directory> <optional output directory>```
