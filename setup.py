@@ -7,7 +7,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name = 'dmsp-to-aacgm',
-    version = '0.1.0',
+    version = '0.1.1',
     author = "Carson O'Ffill",
     author_email = 'offillcarson@gmail.com',
     license = 'MIT',
@@ -25,6 +25,6 @@ setup(
     ],
     entry_points = '''
         [console_scripts]
-        dmsp-to-aacgm=dmsp_to_aacgm:cli
+        dmsp-to-aacgm=src.dmsp_to_aacgm:cli
     '''
 )
