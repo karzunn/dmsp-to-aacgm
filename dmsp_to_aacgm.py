@@ -1,43 +1,41 @@
-from typing import Callable
 import click
-import h5py
-from abc import ABC, abstractmethod
-
-class DataSet(ABC):
-
-    @abstractmethod
-    def convert(self): ...
-
-    @abstractmethod
-    def save(self, output_path: str): ...
+from lib.datasets.factory import dataset_factory
+from lib.utils import get_files, build_output_path, establish_output_dir
 
 
-def data_reader_factory(file_path: str) -> Callable:
-    if file_path.endswith(".hdf5"):
-        return hdf5_reader
-    raise Exception(f"Cannot process file type: {file_path.split(".")[-1]}")
-    
-def hdf5_reader(file_path: str) -> DataSet:
-    contents = h5py.File(file_path, "r")
-    if contents.get("Data", {}).get("Table Layout"):
-        return DmspHdf5Data(file_path)
 
+@click.command(
+    name="dmsp-to-aacgm",
+    help="Converts geomagnetic coordinates in DMSP data files to AACGM coordinates.\n\n"
+         "input_path: Path of a dmsp file or directory containing dmsp files for conversion.\n\n"
+         "output_dir: Optional directory to save converted files. Defaults to 'aacgm'."
+)
+@click.argument(
+    "input_path",
+    type=click.Path(exists=True),
+    metavar="<input path>"
+)
+@click.argument(
+    "output_dir",
+    type=click.Path(),
+    required=False,
+    metavar="<output dir>"
+)
+def cli(input_path, output_dir):
 
-class DmspHdf5Data(DataSet):
-    def __init__(self, path: str):
-        self.contents = h5py.File(path, "r")
-        self.data_set = self.contents["Data"]["Table Layout"]
-        print(self.data_set.dtype.descr)
+    if output_dir is None:
+        output_dir = "aacgm"
 
-    def convert(self): ...
+    establish_output_dir(output_dir)
 
-    def save(self): ...
+    for file_path in get_files(input_path):
+        try:
+            data_set = dataset_factory(file_path)
+            data_set.convert()
+            data_set.save(
+                output_path=build_output_path(file_path, output_dir)
+            )
+        except Exception as e:
+            print(f"Could not process {file_path} due to: {str(e)}")
 
-
-@click.command()
-@click.argument("path", type=click.Path(exists=True))
-def cli(path):
-    file_reader = data_reader_factory(path)
-    data_set = file_reader(path)
-    data_set.convert()
-    data_set.save()
+    print("Conversion complete!")
