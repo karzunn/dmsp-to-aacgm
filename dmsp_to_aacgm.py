@@ -17,7 +17,7 @@ from lib.utils import get_files, build_output_path, establish_output_dir
 )
 @click.argument(
     "output_dir",
-    type=click.Path(),
+    type=click.Path(file_okay=False),
     required=False,
     metavar="<output dir>"
 )

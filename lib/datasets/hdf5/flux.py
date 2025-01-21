@@ -50,3 +50,4 @@ class FluxHdf5(DataSet):
         with h5py.File(output_path, "w") as output_file:
             for key in self.hdf5_file.keys():
                 self.hdf5_file.copy(key, output_file)
+        self.hdf5_file.close()
