@@ -19,9 +19,6 @@ class TestHdf5(unittest.TestCase):
         return self.runner.invoke(cli, args)
 
     def test_hdf5_mag_conversion(self):
-        print("Current Working Directory:", os.getcwd())
-        for entry in os.listdir():
-            print(entry)
         with TemporaryDirectory() as temp_output_dir:
             file_name = "dms_20150410_16s1.001.hdf5"
             input_file = "tests\data\inputs\\" + file_name

@@ -1,3 +1,4 @@
+import os
 import click
 from .lib.datasets.factory import dataset_factory
 from .lib.utils import get_files, build_output_path, establish_output_dir
@@ -12,7 +13,7 @@ from .lib.utils import get_files, build_output_path, establish_output_dir
 )
 @click.argument(
     "input_path",
-    type=click.Path(exists=True),
+    type=click.Path(exists=False),
     metavar="<input path>"
 )
 @click.argument(
@@ -23,12 +24,17 @@ from .lib.utils import get_files, build_output_path, establish_output_dir
 )
 def cli(input_path, output_dir):
 
+    print("Current Working Directory:", os.getcwd())
+    for file in os.listdir(os.getcwd()):
+        print(file)
+
     if output_dir is None:
         output_dir = "aacgm"
 
     establish_output_dir(output_dir)
 
     for file_path in get_files(input_path):
+        print(f"Converting {file_path}...")
         try:
             data_set = dataset_factory(file_path)
             data_set.convert()
@@ -37,5 +43,4 @@ def cli(input_path, output_dir):
             )
         except Exception as e:
             print(f"Could not process {file_path} due to: {str(e)}")
-
-    print("Conversion complete!")
+        print("Conversion complete!")
