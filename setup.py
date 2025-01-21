@@ -15,7 +15,7 @@ setup(
     long_description = long_description,
     long_description_content_type = "text/markdown",
     url = 'https://github.com/karzunn/dmsp-to-aacgm',
-    py_modules = ['dmsp_to_aacgm', 'app'],
+    py_modules = ['src'],
     packages = find_packages(),
     install_requires = [requirements],
     python_requires='>=3.12',

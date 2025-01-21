@@ -4,7 +4,7 @@ from typing import List
 import unittest
 from click.testing import CliRunner
 import h5py
-from dmsp_to_aacgm import cli
+from src.dmsp_to_aacgm import cli
 from math import isnan
 
 

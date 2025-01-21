@@ -1,6 +1,6 @@
 import click
-from lib.datasets.factory import dataset_factory
-from lib.utils import get_files, build_output_path, establish_output_dir
+from .lib.datasets.factory import dataset_factory
+from .lib.utils import get_files, build_output_path, establish_output_dir
 
 
 
