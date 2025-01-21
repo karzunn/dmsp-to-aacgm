@@ -14,6 +14,7 @@ class TestHdf5(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.runner = CliRunner()
+        cls.test_data_dir = os.path.join(os.getcwd(), "tests\data")
 
     def run_tool(self, args: List[str] = []):
         return self.runner.invoke(cli, args)
@@ -21,21 +22,20 @@ class TestHdf5(unittest.TestCase):
     def test_hdf5_mag_conversion(self):
         with TemporaryDirectory() as temp_output_dir:
             file_name = "dms_20150410_16s1.001.hdf5"
-            input_file = "tests\data\inputs\\" + file_name
+            input_file = self.test_data_dir+"\inputs\\" + file_name
 
             result = self.run_tool([input_file, temp_output_dir])
-            print(result.output)
             assert result.exit_code == 0, f"CLI failed: {result.output}"
 
             output_file_path = os.path.join(temp_output_dir, file_name)
             assert os.path.exists(output_file_path), "Output file was not created"
 
-            self._compare_hdf5_files(output_file_path, "tests\data\outputs\\" + file_name)
+            self._compare_hdf5_files(output_file_path, self.test_data_dir+"\outputs\\" + file_name)
 
     def test_hdf5_flux_conversion(self):
         with TemporaryDirectory() as temp_output_dir:
             file_name = "dms_19970525_12e.001.hdf5"
-            input_file = "tests\data\inputs\\" + file_name
+            input_file = self.test_data_dir+"\inputs\\" + file_name
 
             result = self.run_tool([input_file, temp_output_dir])
             assert result.exit_code == 0, f"CLI failed: {result.output}"
@@ -43,7 +43,7 @@ class TestHdf5(unittest.TestCase):
             output_file_path = os.path.join(temp_output_dir, file_name)
             assert os.path.exists(output_file_path), "Output file was not created"
 
-            self._compare_hdf5_files(output_file_path, "tests\data\outputs\\" + file_name)
+            self._compare_hdf5_files(output_file_path, self.test_data_dir+"\outputs\\" + file_name)
 
     def _compare_hdf5_files(self, input_path: str, expected_file_path: str):
         with h5py.File(input_path, "r") as actual, h5py.File(expected_file_path, "r") as expected:

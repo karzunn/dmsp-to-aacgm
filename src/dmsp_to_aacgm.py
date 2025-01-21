@@ -13,7 +13,7 @@ from .lib.utils import get_files, build_output_path, establish_output_dir
 )
 @click.argument(
     "input_path",
-    type=click.Path(exists=False),
+    type=click.Path(exists=True),
     metavar="<input path>"
 )
 @click.argument(
@@ -24,14 +24,8 @@ from .lib.utils import get_files, build_output_path, establish_output_dir
 )
 def cli(input_path, output_dir):
 
-    print("Current Working Directory:", os.getcwd())
-    for file in os.listdir(os.getcwd()):
-        print(file)
-
     if output_dir is None:
         output_dir = "aacgm"
-
-    return
 
     establish_output_dir(output_dir)
 
