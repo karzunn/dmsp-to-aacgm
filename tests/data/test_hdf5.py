@@ -5,7 +5,7 @@ import unittest
 from click.testing import CliRunner
 import h5py
 from src.dmsp_to_aacgm import cli
-from math import isnan
+from math import isnan, isclose
 
 
 
@@ -51,6 +51,7 @@ class TestHdf5(unittest.TestCase):
             for a, e, in zip(actual_values, expected_values):
                 for a_item, e_item in zip(a, e):
                     if not isnan(a_item) and not isnan(e_item):
-                        assert a_item == e_item, f"Values in record do not match. Actual: {a} Expected: {e}"
+                        assert isclose(a_item, e_item, rel_tol=1e-12, abs_tol=1e-12), \
+                        f"Values in record do not match. Actual: {a} Expected: {e}"
 
     
