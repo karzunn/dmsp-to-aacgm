@@ -24,6 +24,7 @@ class TestHdf5(unittest.TestCase):
             input_file = "tests\data\inputs\\" + file_name
 
             result = self.run_tool([input_file, temp_output_dir])
+            print(result.output)
             assert result.exit_code == 0, f"CLI failed: {result.output}"
 
             output_file_path = os.path.join(temp_output_dir, file_name)

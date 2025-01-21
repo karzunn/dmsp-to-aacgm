@@ -31,6 +31,8 @@ def cli(input_path, output_dir):
     if output_dir is None:
         output_dir = "aacgm"
 
+    return
+
     establish_output_dir(output_dir)
 
     for file_path in get_files(input_path):
