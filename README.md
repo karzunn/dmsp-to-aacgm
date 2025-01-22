@@ -45,7 +45,7 @@ The software was written by Carson O'Ffill and the project was guided by Simon W
 **NSF CEDAR Grants**:
 - 2431665
 
-This software is distributed for free under a MIT license. If you find it useful, please acknowledge our work in your publications or projects.
+This software is distributed for free under an MIT license. If you find it useful, please acknowledge our work in your publications or projects.
 
 ## Contact Info
 
