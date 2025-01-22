@@ -1,6 +1,6 @@
 # Overview
 
-A command-line tool for converting geomagnetic coordinates in DMSP data files to AACGM coordinates. This tool leverages the [aacgmv2 Python library](https://github.com/aburrell/aacgmv2). 
+A tool for converting geomagnetic coordinates in DMSP data files to AACGM coordinates. The [aacgmv2 Python library](https://github.com/aburrell/aacgmv2) is leveraged for the conversion.
 
 
 # Supported Files
@@ -17,13 +17,13 @@ To add support for additional files, please reach out to offillcarson@gmail.com,
 
 ```pip install dmsp-to-aacgm```
 
-## Usage
+## Command-line Usage
 
 ```dmsp-to-aacgm <input file/directory> [<output directory>]```
 
 If the output directory is not specified, or the output directory is the same as the input directory, the input files will be modified.
 
-## Examples
+### Examples
 
 | **Command**                                        | **Description**                                      |
 |---------------------------------------------------|------------------------------------------------------|
@@ -31,6 +31,22 @@ If the output directory is not specified, or the output directory is the same as
 | `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions` | Convert a single file, output to `aacgm_conversions` |
 | `dmsp-to-aacgm dmsp_data`                         | Convert all files in `dmsp_data`                     |
 | `dmsp-to-aacgm dmsp_data aacgm_conversions`       | Convert all files in `dmsp_data`, output to `aacgm_conversions` |
+
+## Usage in Python
+
+```python
+from dmsp_to_aacgm import get_dataset
+
+# Convert a file
+data_set = get_dataset("dms_20150410_16s1.001.hdf5")
+data_set.convert()
+data_set.close()
+
+# Create the converted file in "aacgm_conversions"
+data_set = get_dataset("dmsp_data", "aacgm_conversions")
+data_set.convert()
+data_set.close()
+```
 
 ## Acknowledgements
 
