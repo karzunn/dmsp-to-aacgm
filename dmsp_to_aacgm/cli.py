@@ -1,3 +1,4 @@
+import os
 import click
 from .lib.datasets.factory import dataset_factory
 from .lib.utils import get_files, build_output_path
@@ -17,7 +18,7 @@ from .lib.utils import get_files, build_output_path
 )
 @click.argument(
     "output_dir",
-    type=click.Path(exists=True, file_okay=False),
+    type=click.Path(file_okay=False),
     required=False,
     metavar="<output dir>"
 )
@@ -26,6 +27,7 @@ def cli(input_path, output_dir):
     for file_path in get_files(input_path):
         print(f"Converting {file_path}...")
         try:
+            os.makedirs(output_dir, exist_ok=True)
             output_path = build_output_path(file_path, output_dir)
             data_set = dataset_factory(file_path, output_path)
             data_set.convert()
