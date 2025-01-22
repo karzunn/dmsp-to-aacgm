@@ -1,11 +1,17 @@
-# DMSP-to-AACGM Converter CLI Tool
+# Overview
 
-A command-line tool for converting geomagnetic coordinates in DMSP data files to AACGM coordinates. This tool leverages the [aacgmv2 Python library](https://github.com/aburrell/aacgmv2). The tool currently supports conversions of the following data files:
+A command-line tool for converting geomagnetic coordinates in DMSP data files to AACGM coordinates. This tool leverages the [aacgmv2 Python library](https://github.com/aburrell/aacgmv2). 
+
+
+# Supported Files
+The tool currently supports conversions of the following data files:
 
 | **Source**                     | **File Type** | **Contents**                                | **Example**                   |
 |--------------------------------|---------------|--------------------------------------------|--------------------------------|
 | [Cedar Madrigal Database](http://cedar.openmadrigal.org)        | HDF5          | 1-second resolution for Ion Drift, Magnetometer, and Electron Density | `dms_20150410_16s1.001.hdf5`  |
 | [Cedar Madrigal Database](http://cedar.openmadrigal.org)        | HDF5          | Flux/Energy values                         | `dms_20150410_16e.001.hdf5`   |
+
+To add support for additional files, please reach out to offillcarson@gmail.com, or submit a pull request.
 
 ## Installation
 
@@ -45,4 +51,4 @@ This software is distributed for free under a MIT license. If you find it useful
 
 Simon Wing: simon.wing@jhuapl.edu
 
-Carson O'Ffill: offill@andrews.edu
+Carson O'Ffill: offillcarson@gmail.com
