@@ -19,29 +19,24 @@ If the output directory is not specified, or the output directory is the same as
 
 ## Examples
 
-### Convert a single file
-```dmsp-to-aacgm dms_20150410_16s1.001.hdf5```
-
-### Convert a single file, output to 'aacgm_conversions'
-```dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions```
-
-### Convert all files in 'dmsp_data'
-```dmsp-to-aacgm dmsp_data```
-
-### Convert all files in 'dmsp_data', output to 'aacgm_conversions'
-```dmsp-to-aacgm dmsp_data aacgm_conversions```
+| **Command**                                        | **Description**                                      |
+|---------------------------------------------------|------------------------------------------------------|
+| `dmsp-to-aacgm dms_20150410_16s1.001.hdf5`        | Convert a single file                                |
+| `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions` | Convert a single file, output to `aacgm_conversions` |
+| `dmsp-to-aacgm dmsp_data`                         | Convert all files in `dmsp_data`                     |
+| `dmsp-to-aacgm dmsp_data aacgm_conversions`       | Convert all files in `dmsp_data`, output to `aacgm_conversions` |
 
 ## Acknowledgements
 
 This project was guided by Simon Wing. We also acknowledge the following grants:
 
-NASA Grants:
+**NASA Grants**:
 - 80NSSC20K0704
 - 80NSSC22K0515
 - 80NSSC23K0899
 - 80NSSC23K0904
 
-NSF CEDAR Grants:
+**NSF CEDAR Grants**:
 - 2431665
 
 This software is distributed for free under a MIT license. If you find it useful, please acknowledge our work in your publications or projects.
