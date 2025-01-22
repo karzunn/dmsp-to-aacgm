@@ -34,7 +34,7 @@ If the output directory is not specified, or the output directory is the same as
 
 ## Acknowledgements
 
-This project was guided by Simon Wing. We also acknowledge the following grants:
+The software was written by Carson O'Ffill and the project was guided by Simon Wing. We also acknowledge the following grants:
 
 **NASA Grants**:
 - 80NSSC20K0704

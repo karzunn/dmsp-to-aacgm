@@ -1,5 +1,5 @@
 from typing import Optional
-from .model import DataSet
+from ..dataset_model import DataSet
 from .hdf5.factory import hdf5_dataset_factory
 
 

@@ -1,4 +1,4 @@
-from ..model import DataSet
+from ....dataset_model import DataSet
 import h5py
 import aacgmv2
 from datetime import datetime
