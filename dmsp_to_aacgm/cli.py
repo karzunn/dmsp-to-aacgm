@@ -1,4 +1,5 @@
 import os
+import sys
 import click
 from .lib.filetypes.factory import dataset_factory
 from .lib.utils import get_files, build_output_path
@@ -29,10 +30,14 @@ def cli(input_path, output_dir):
     for file_path in get_files(input_path):
         print(f"Converting {file_path}...")
         try:
-            output_path = build_output_path(file_path, output_dir)
+            if output_dir:
+                output_path = build_output_path(file_path, output_dir)
+            else:
+                output_path = file_path
             data_set = dataset_factory(file_path, output_path)
             data_set.convert()
             data_set.close()
+            print("Conversion complete!")
         except Exception as e:
             print(f"Could not process {file_path} due to: {str(e)}")
-        print("Conversion complete!")
+            sys.exit(1)

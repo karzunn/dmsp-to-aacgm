@@ -17,6 +17,19 @@ class TestHdf5(unittest.TestCase):
 
     def run_tool(self, args: List[str] = []):
         return self.runner.invoke(cli, args)
+    
+    def test_hdf5_convert_existing_file(self):
+        with TemporaryDirectory() as temp_output_dir:
+            file_name = "dms_20150410_16s1.001.hdf5"
+            input_file = "tests/data/inputs/" + file_name
+
+            new_file_name = os.path.join(temp_output_dir, file_name)
+            self._create_copy(input_file, new_file_name)
+
+            result = self.run_tool([new_file_name])
+            assert result.exit_code == 0, f"CLI failed: {result.output}"
+
+            self._compare_hdf5_files(new_file_name, "tests/data/outputs/" + file_name)
 
     def test_hdf5_mag_conversion(self):
         with TemporaryDirectory() as temp_output_dir:
@@ -53,5 +66,13 @@ class TestHdf5(unittest.TestCase):
                     if not isnan(a_item) and not isnan(e_item):
                         assert isclose(a_item, e_item, rel_tol=1e-12, abs_tol=1e-12), \
                         f"Values in record do not match. Actual: {a} Expected: {e}"
+
+    def _create_copy(self, file_path: str, output_path: str):
+        input_file = h5py.File(file_path, "r")
+        output_file = h5py.File(output_path, "w")
+        for key in input_file.keys():
+            input_file.copy(key, output_file)
+        input_file.close()
+        output_file.close()
 
     
