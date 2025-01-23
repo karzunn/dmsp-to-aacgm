@@ -23,7 +23,8 @@ from .lib.utils import get_files, build_output_path
     metavar="<output dir>"
 )
 def cli(input_path, output_dir):
-    os.makedirs(output_dir, exist_ok=True)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
 
     for file_path in get_files(input_path):
         print(f"Converting {file_path}...")

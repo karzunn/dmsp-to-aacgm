@@ -7,7 +7,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name = 'dmsp-to-aacgm',
-    version = '1.0.2',
+    version = '1.0.3',
     author = "Carson O'Ffill",
     author_email = 'offillcarson@gmail.com',
     license = 'MIT',
