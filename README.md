@@ -42,8 +42,8 @@ data_set = get_dataset("dms_20150410_16s1.001.hdf5")
 data_set.convert()
 data_set.close()
 
-# Create the converted file in "aacgm_conversions"
-data_set = get_dataset("dmsp_data", "aacgm_conversions")
+# Create a converted file in "aacgm_conversions"
+data_set = get_dataset("dms_20150410_16s1.001.hdf5", "aacgm_conversions")
 data_set.convert()
 data_set.close()
 ```
