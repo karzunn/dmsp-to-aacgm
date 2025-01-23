@@ -40,4 +40,3 @@ def cli(input_path, output_dir):
             print("Conversion complete!")
         except Exception as e:
             print(f"Could not process {file_path} due to: {str(e)}")
-            sys.exit(1)
