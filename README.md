@@ -35,7 +35,7 @@ If the output directory is not specified, or the output directory is the same as
 ## Usage in Python
 
 ```python
-from dmsp_to_aacgm import get_dataset
+from dmsp_to_aacgm import get_dataset, build_csv
 
 # Convert a file
 data_set = get_dataset("dms_20150410_16s1.001.hdf5")
@@ -43,8 +43,13 @@ data_set.convert()
 data_set.close()
 
 # Create a converted file in "aacgm_conversions"
-data_set = get_dataset("dms_20150410_16s1.001.hdf5", "aacgm_conversions")
+data_set = get_dataset("dms_20150410_16s1.001.hdf5", "aacgm_conversions/dms_20150410_16s1.001.hdf5")
 data_set.convert()
+data_set.close()
+
+# Create a minimal aacgm csv file in the current directory
+data_set = get_dataset("dms_20150410_16s1.001.hdf5")
+build_csv(data_set, "aacgm_csv_file")
 data_set.close()
 ```
 

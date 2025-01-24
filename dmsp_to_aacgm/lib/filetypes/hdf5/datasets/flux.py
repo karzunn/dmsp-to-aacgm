@@ -1,3 +1,4 @@
+from typing import Iterator, Tuple
 from ....dataset_model import DataSet
 import h5py
 import aacgmv2
@@ -26,24 +27,29 @@ class FluxHdf5(DataSet):
                     return False
             return True
         return False
-
-    def convert(self):
-        data = self.hdf5_file["Data"]["Table Layout"][()]
-
+    
+    def get_aacgm_data(self) -> Iterator[Tuple[datetime, float, float, float]]:
         previous_date = None
-        for idx, record in enumerate(data):
+        for record in self.hdf5_file["Data"]["Table Layout"][()]:
             record = list(record)
             year, month, day, hour, minute, second = record[:6]
             gdlat, glon, gdalt = record[11:14]
-            date = datetime(year, month, day, hour, minute, second)
-            if date != previous_date:
-                mlat, mlon, mlt = aacgmv2.get_aacgm_coord(gdlat, glon, gdalt,
-                                                        datetime(year, month, day, hour, minute, second),
+            timestamp = datetime(year, month, day, hour, minute, second)
+            if timestamp != previous_date:
+                mlat, mlon, mlt = aacgmv2.get_aacgm_coord(gdlat, glon, gdalt, timestamp,
                                                         method='ALLOWTRACE')
+            previous_date = timestamp
+            yield timestamp, mlat, mlon, mlt
+
+    def convert(self):
+        data = self.hdf5_file["Data"]["Table Layout"][()]
+        aacgm_data = self.get_aacgm_data()
+
+        for idx, converted_data in enumerate(aacgm_data):
+            _, mlat, mlon, mlt = converted_data
             data[idx][15] = mlt
             data[idx][16] = mlat
             data[idx][17] = mlon
-            previous_date = date
 
         self.hdf5_file["Data"]["Table Layout"][...] = data
 

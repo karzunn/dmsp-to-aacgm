@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Optional
 import os
+from .dataset_model import DataSet
 
 
 def get_files(path: str) -> List[str]:
@@ -34,4 +35,37 @@ def build_output_path(file_path: str, output_dir: str) -> str:
     """
     filename = os.path.basename(file_path)
     return os.path.join(output_dir, filename)
+
+
+def build_csv(
+        data_set: DataSet,
+        file_name: str,
+        output_dir: str = "",
+    ):
+    """
+    Creates a csv file containing time data and AACGM coordinates.
+
+    Args:
+        data_set (DataSet): The data set to use.
+        file_name (str): The csv file name.
+        output_dir (str): The output directory od the csv file.
+    """
+    csv_lines = []
+    for timestamp, mlat, mlon, mlt in data_set.get_aacgm_data():
+        csv_lines.append(
+            ",".join([
+                str(item) for item in [
+                    timestamp.year, timestamp.month, timestamp.day,
+                    timestamp.hour, timestamp.minute, timestamp.second,
+                    mlat, mlon, mlt
+                ]
+            ])
+        )
+    csv_data = "\n".join(csv_lines)
+    output_path = os.path.join(output_dir, file_name+".csv")
+    with open(output_path, "w") as file:
+        file.write(csv_data)
+
+
+
     

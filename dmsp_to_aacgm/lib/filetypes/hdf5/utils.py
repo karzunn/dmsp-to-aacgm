@@ -3,8 +3,7 @@ import h5py
 
 
 def read_hdf5_file(file_path: str, output_path: Optional[str] = None) -> h5py.File:
-    if output_path is None:
-        output_path = file_path
+    output_path = output_path or file_path
     
     if file_path != output_path:
         input_file = h5py.File(file_path, "r")

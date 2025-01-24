@@ -1,8 +1,8 @@
 import os
-import sys
+from pathlib import Path
 import click
 from .lib.filetypes.factory import dataset_factory
-from .lib.utils import get_files, build_output_path
+from .lib.utils import get_files, build_output_path, build_csv
 
 
 
@@ -23,19 +23,30 @@ from .lib.utils import get_files, build_output_path
     required=False,
     metavar="<output dir>"
 )
-def cli(input_path, output_dir):
+@click.option(
+    "-ac", "--aacgm-csv",
+    is_flag=True,
+    help="Create a csv file with time and AACGM coordinates only. Headers: YYYY, MM, DD, HH, mm, ss, mlat, mlon, mlt"
+)
+def cli(input_path, output_dir, aacgm_csv):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
+    else:
+        output_dir = os.path.dirname(input_path)
 
     for file_path in get_files(input_path):
         print(f"Converting {file_path}...")
         try:
-            if output_dir:
-                output_path = build_output_path(file_path, output_dir)
+
+            if aacgm_csv:
+                data_set = dataset_factory(file_path)
+                file_name = Path(file_path).stem
+                build_csv(data_set, file_name, output_dir)
             else:
-                output_path = file_path
-            data_set = dataset_factory(file_path, output_path)
-            data_set.convert()
+                output_path = build_output_path(file_path, output_dir)
+                data_set = dataset_factory(file_path, output_path)
+                data_set.convert()
+
             data_set.close()
             print("Conversion complete!")
         except Exception as e:
