@@ -50,7 +50,7 @@ data_set.close()
 
 # Create a minimal aacgm csv file in the current directory
 data_set = get_dataset("dms_20150410_16s1.001.hdf5")
-build_csv(data_set, "aacgm_csv_file")
+build_csv(data_set, file_name="aacgm_csv_file")
 data_set.close()
 ```
 
