@@ -31,6 +31,7 @@ If the output directory is not specified, or the output directory is the same as
 | `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions` | Convert a single file, output to `aacgm_conversions` |
 | `dmsp-to-aacgm dmsp_data`                         | Convert all files in `dmsp_data`                     |
 | `dmsp-to-aacgm dmsp_data aacgm_conversions`       | Convert all files in `dmsp_data`, output to `aacgm_conversions` |
+| `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions --aacgm-csv` | Create a csv file containing time and aacgm data, output to `aacgm_conversions` |
 
 ## Usage in Python
 
