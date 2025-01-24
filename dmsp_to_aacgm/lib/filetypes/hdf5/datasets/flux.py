@@ -38,15 +38,17 @@ class FluxHdf5(DataSet):
             if timestamp != previous_date:
                 mlat, mlon, mlt = aacgmv2.get_aacgm_coord(gdlat, glon, gdalt, timestamp,
                                                         method='ALLOWTRACE')
-            previous_date = timestamp
-            yield timestamp, mlat, mlon, mlt
+                previous_date = timestamp
+                yield timestamp, mlat, mlon, mlt
 
     def convert(self):
         data = self.hdf5_file["Data"]["Table Layout"][()]
         aacgm_data = self.get_aacgm_data()
 
-        for idx, converted_data in enumerate(aacgm_data):
-            _, mlat, mlon, mlt = converted_data
+        current_aacgm_time = None
+        for idx, record in enumerate(data):
+            if datetime(*list(record)[:6]) != current_aacgm_time:
+                current_aacgm_time, mlat, mlon, mlt = next(aacgm_data)
             data[idx][15] = mlt
             data[idx][16] = mlat
             data[idx][17] = mlon
