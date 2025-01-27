@@ -1,12 +1,12 @@
-from typing import List, Optional
-from .utils import read_hdf5_file
+from typing import List
+import h5py
 from ...dataset_model import DataSet
 from .datasets.mag import MagHdf5
 from .datasets.flux import FluxHdf5
 
 
-def hdf5_dataset_factory(file_path: str, output_path: Optional[str] = None) -> DataSet:
-    hdf5_file = read_hdf5_file(file_path, output_path)
+def hdf5_dataset_factory(file_path: str) -> DataSet:
+    hdf5_file = h5py.File(file_path, "r+")
     data_sets: List[DataSet] = [MagHdf5, FluxHdf5]
     for data_set in data_sets:
         if data_set.match(hdf5_file):

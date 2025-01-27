@@ -1,8 +1,9 @@
-from typing import Iterator, Tuple
+from typing import Iterator, Optional, Tuple
 from ....dataset_model import DataSet
 import h5py
 import aacgmv2
 from datetime import datetime
+from ..utils import copy_hdf5_file
 
 
 class FluxHdf5(DataSet):
@@ -41,7 +42,7 @@ class FluxHdf5(DataSet):
                 previous_date = timestamp
                 yield timestamp, mlat, mlon, mlt
 
-    def convert(self):
+    def convert(self, output_path: Optional[str] = None):
         data = self.hdf5_file["Data"]["Table Layout"][()]
         aacgm_data = self.get_aacgm_data()
 
@@ -53,7 +54,12 @@ class FluxHdf5(DataSet):
             data[idx][16] = mlat
             data[idx][17] = mlon
 
-        self.hdf5_file["Data"]["Table Layout"][...] = data
+        if output_path is None:
+            self.hdf5_file["Data"]["Table Layout"][...] = data
+        else:
+            file_copy = copy_hdf5_file(self.hdf5_file, output_path)
+            file_copy["Data"]["Table Layout"][...] = data
+            file_copy.close()
 
     def close(self):
         self.hdf5_file.close()

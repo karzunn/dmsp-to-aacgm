@@ -36,7 +36,7 @@ If the output directory is not specified, or the output directory is the same as
 ## Usage in Python
 
 ```python
-from dmsp_to_aacgm import get_dataset, minimal_h5_file
+from dmsp_to_aacgm import get_dataset
 
 # Convert a file
 data_set = get_dataset("dms_20150410_16s1.001.hdf5")
@@ -44,13 +44,13 @@ data_set.convert()
 data_set.close()
 
 # Create a converted file in "aacgm_conversions"
-data_set = get_dataset("dms_20150410_16s1.001.hdf5", "aacgm_conversions/dms_20150410_16s1.001.hdf5")
-data_set.convert()
+data_set = get_dataset("dms_20150410_16s1.001.hdf5")
+data_set.convert(output_path="aacgm_conversions/dms_20150410_16s1.001.hdf5")
 data_set.close()
 
 # Create an h5 file containing only time and aacgm data in the "aacgm_conversions" directory
 data_set = get_dataset("dms_20150410_16s1.001.hdf5")
-minimal_h5_file(data_set, file_name="aacgm_h5_file", output_dir="aacgm_conversions")
+data_set.minimal_h5_file(file_name="aacgm_h5_file", output_dir="aacgm_conversions")
 data_set.close()
 ```
 

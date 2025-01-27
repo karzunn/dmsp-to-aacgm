@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import click
 from .lib.filetypes.factory import dataset_factory
-from .lib.utils import get_files, build_output_path, minimal_h5_file
+from .lib.utils import get_files
 
 
 
@@ -31,21 +31,22 @@ from .lib.utils import get_files, build_output_path, minimal_h5_file
 def cli(input_path, output_dir, h5):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
-    else:
-        output_dir = os.path.dirname(input_path)
 
     for file_path in get_files(input_path):
         print(f"Converting {file_path}...")
         try:
+            data_set = dataset_factory(file_path)
 
             if h5:
-                data_set = dataset_factory(file_path)
                 file_name = Path(file_path).stem + "_aacgm"
-                minimal_h5_file(data_set, file_name, output_dir)
+                data_set.minimal_h5_file(file_name, output_dir)
             else:
-                output_path = build_output_path(file_path, output_dir)
-                data_set = dataset_factory(file_path, output_path)
-                data_set.convert()
+                output_path = None
+                if output_dir:
+                    output_path = os.path.join(
+                        output_dir, os.path.basename(file_path)
+                    )
+                data_set.convert(output_path)
 
             data_set.close()
             print("Conversion complete!")
