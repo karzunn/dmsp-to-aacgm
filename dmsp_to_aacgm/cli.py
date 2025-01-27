@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import click
 from .lib.filetypes.factory import dataset_factory
-from .lib.utils import get_files, build_output_path, build_csv
+from .lib.utils import get_files, build_output_path, build_h5
 
 
 
@@ -24,11 +24,11 @@ from .lib.utils import get_files, build_output_path, build_csv
     metavar="<output dir>"
 )
 @click.option(
-    "-ac", "--aacgm-csv",
+    "-h5",
     is_flag=True,
-    help="Create a csv file with time and AACGM coordinates only. Headers: YYYY, MM, DD, HH, mm, ss, mlat, mlon, mlt"
+    help="Create a h5 file with time and AACGM coordinates only"
 )
-def cli(input_path, output_dir, aacgm_csv):
+def cli(input_path, output_dir, h5):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
     else:
@@ -38,10 +38,10 @@ def cli(input_path, output_dir, aacgm_csv):
         print(f"Converting {file_path}...")
         try:
 
-            if aacgm_csv:
+            if h5:
                 data_set = dataset_factory(file_path)
-                file_name = Path(file_path).stem
-                build_csv(data_set, file_name, output_dir)
+                file_name = Path(file_path).stem + "_aacgm"
+                build_h5(data_set, file_name, output_dir)
             else:
                 output_path = build_output_path(file_path, output_dir)
                 data_set = dataset_factory(file_path, output_path)

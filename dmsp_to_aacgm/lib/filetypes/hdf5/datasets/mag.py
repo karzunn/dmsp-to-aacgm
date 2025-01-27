@@ -1,6 +1,5 @@
-from typing import Iterator, List, Tuple
+from typing import Iterator, Tuple
 from ....dataset_model import DataSet
-from ....utils import build_csv
 import h5py
 import aacgmv2
 from datetime import datetime

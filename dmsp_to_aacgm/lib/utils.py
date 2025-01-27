@@ -1,4 +1,6 @@
-from typing import List, Optional
+from typing import List
+import h5py
+import numpy as np
 import os
 from .dataset_model import DataSet
 
@@ -37,34 +39,39 @@ def build_output_path(file_path: str, output_dir: str) -> str:
     return os.path.join(output_dir, filename)
 
 
-def build_csv(
+def build_h5(
         data_set: DataSet,
         file_name: str,
         output_dir: str = "",
     ):
     """
-    Creates a csv file containing time data and AACGM coordinates.
+    Creates an h5 file containing time data and AACGM coordinates.
 
     Args:
         data_set (DataSet): The data set to use.
-        file_name (str): The csv file name.
-        output_dir (str): The output directory od the csv file.
+        file_name (str): The h5 file name.
+        output_dir (str): The output directory of the h5 file.
     """
-    csv_lines = []
+
+    dtype = np.dtype([
+        ('year', 'u2'), ('month', 'u1'), ('day', 'u1'),
+        ('hour', 'u1'), ('min', 'u1'), ('sec', 'u1'),
+        ('mlat', 'f8'), ('mlon', 'f8'), ('mlt', 'f8')
+    ])
+    
+    data = []
     for timestamp, mlat, mlon, mlt in data_set.get_aacgm_data():
-        csv_lines.append(
-            ",".join([
-                str(item) for item in [
-                    timestamp.year, timestamp.month, timestamp.day,
-                    timestamp.hour, timestamp.minute, timestamp.second,
-                    mlat, mlon, mlt
-                ]
-            ])
-        )
-    csv_data = "\n".join(csv_lines)
-    output_path = os.path.join(output_dir, file_name+".csv")
-    with open(output_path, "w") as file:
-        file.write(csv_data)
+        data.append((
+            timestamp.year, timestamp.month, timestamp.day,
+            timestamp.hour, timestamp.minute, timestamp.second,
+            mlat, mlon, mlt
+        ))
+    
+    data = np.array(data, dtype=dtype)
+    output_path = os.path.join(output_dir, file_name + ".hdf5")
+    with h5py.File(output_path, "w") as h5f:
+        h5f.create_dataset("/Data", data=data)
+
 
 
 

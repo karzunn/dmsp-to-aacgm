@@ -12,10 +12,13 @@ from math import isnan, isclose
 
 class TestHdf5(unittest.TestCase):
 
-    input_dir = "tests/data/inputs"
-    output_dir = "tests/data/outputs"
-    flux_filename = "dms_19970525_12e.001.hdf5"
-    mag_filename = "dms_20150410_16s1.001.hdf5"
+    input_dir = "tests/data/inputs/"
+    output_dir = "tests/data/outputs/"
+
+    test_data = [
+        ("mag", input_dir+"dms_20150410_16s1.001.hdf5", output_dir+"dms_20150410_16s1.001.hdf5"),
+        ("flux", input_dir+"dms_19970525_12e.001.hdf5", output_dir+"dms_19970525_12e.001.hdf5")
+    ]
 
     @classmethod
     def setUpClass(cls):
@@ -25,76 +28,48 @@ class TestHdf5(unittest.TestCase):
         return self.runner.invoke(cli, args)
     
     def test_hdf5_convert_existing_file(self):
-        with TemporaryDirectory() as temp_output_dir:
-            input_file = os.path.join(self.input_dir, self.mag_filename)
-            expected_output_file = os.path.join(self.output_dir, self.mag_filename)
+        for test_name, input_file_path, expected_output_file_path in self.test_data:
+            with self.subTest(test_name=test_name):
+                with TemporaryDirectory() as temp_output_dir:
+                    new_file_path = os.path.join(temp_output_dir, os.path.basename(input_file_path))
+                    self._create_copy(input_file_path, new_file_path)
 
-            new_file_name = os.path.join(temp_output_dir, self.mag_filename)
-            self._create_copy(input_file, new_file_name)
+                    result = self.run_tool([new_file_path])
+                    assert result.exit_code == 0, f"CLI failed: {result.output}"
 
-            result = self.run_tool([new_file_name])
-            assert result.exit_code == 0, f"CLI failed: {result.output}"
+                    self._compare_hdf5_files(new_file_path, expected_output_file_path, "Data", "Table Layout")
 
-            self._compare_hdf5_files(new_file_name, expected_output_file)
+    def test_hdf5_converted_copy(self):
+        for test_name, input_file_path, expected_output_file_path in self.test_data:
+            with self.subTest(test_name=test_name):
+                with TemporaryDirectory() as temp_output_dir:
+                    result = self.run_tool([input_file_path, temp_output_dir])
+                    assert result.exit_code == 0, f"CLI failed: {result.output}"
 
-    def test_hdf5_mag_conversion(self):
-        with TemporaryDirectory() as temp_output_dir:
-            input_file = os.path.join(self.input_dir, self.mag_filename)
-            expected_output_file = os.path.join(self.output_dir, self.mag_filename)
+                    actual_output_file_path = os.path.join(temp_output_dir, os.path.basename(input_file_path))
+                    assert os.path.exists(actual_output_file_path), "Output file was not created"
 
-            result = self.run_tool([input_file, temp_output_dir])
-            assert result.exit_code == 0, f"CLI failed: {result.output}"
+                    self._compare_hdf5_files(actual_output_file_path, expected_output_file_path, "Data", "Table Layout")
 
-            output_file_path = os.path.join(temp_output_dir, self.mag_filename)
-            assert os.path.exists(output_file_path), "Output file was not created"
+    def test_hdf5_minimal_h5(self):
+        for test_name, input_file_path, _ in self.test_data:
+            with self.subTest(test_name=test_name):
+                with TemporaryDirectory() as temp_output_dir:
+                    output_file_name = Path(input_file_path).stem + "_aacgm.hdf5"
+                    expected_output_file_path = os.path.join(self.output_dir, output_file_name)
 
-            self._compare_hdf5_files(output_file_path, expected_output_file)
+                    result = self.run_tool([input_file_path, temp_output_dir, "-h5"])
+                    assert result.exit_code == 0, f"CLI failed: {result.output}"
 
-    def test_hdf5_mag_csv(self):
-        with TemporaryDirectory() as temp_output_dir:
-            input_file = os.path.join(self.input_dir, self.mag_filename)
-            csv_file_name = Path(self.mag_filename).stem + ".csv"
-            expected_output_file = os.path.join(self.output_dir, csv_file_name)
+                    actual_output_file_path = os.path.join(temp_output_dir, output_file_name)
+                    assert os.path.exists(actual_output_file_path), "Output file was not created"
+                    
+                    self._compare_hdf5_files(actual_output_file_path, expected_output_file_path, "/", "Data")
 
-            result = self.run_tool([input_file, temp_output_dir, "-ac"])
-            assert result.exit_code == 0, f"CLI failed: {result.output}"
-
-            output_file_path = os.path.join(temp_output_dir, csv_file_name)
-            assert os.path.exists(output_file_path), "Output file was not created"
-
-            self._compare_csv_files(output_file_path, expected_output_file)
-
-    def test_hdf5_flux_conversion(self):
-        with TemporaryDirectory() as temp_output_dir:
-            input_file = os.path.join(self.input_dir, self.flux_filename)
-            expected_output_file = os.path.join(self.output_dir, self.flux_filename)
-
-            result = self.run_tool([input_file, temp_output_dir])
-            assert result.exit_code == 0, f"CLI failed: {result.output}"
-
-            output_file_path = os.path.join(temp_output_dir, self.flux_filename)
-            assert os.path.exists(output_file_path), "Output file was not created"
-
-            self._compare_hdf5_files(output_file_path, expected_output_file)
-
-    def test_hdf5_flux_csv(self):
-        with TemporaryDirectory() as temp_output_dir:
-            input_file = os.path.join(self.input_dir, self.flux_filename)
-            csv_file_name = Path(self.flux_filename).stem + ".csv"
-            expected_output_file = os.path.join(self.output_dir, csv_file_name)
-
-            result = self.run_tool([input_file, temp_output_dir, "-ac"])
-            assert result.exit_code == 0, f"CLI failed: {result.output}"
-
-            output_file_path = os.path.join(temp_output_dir, csv_file_name)
-            assert os.path.exists(output_file_path), "Output file was not created"
-
-            self._compare_csv_files(output_file_path, expected_output_file)
-
-    def _compare_hdf5_files(self, input_path: str, expected_file_path: str):
+    def _compare_hdf5_files(self, input_path: str, expected_file_path: str, group: str, data_set: str):
         with h5py.File(input_path, "r") as actual, h5py.File(expected_file_path, "r") as expected:
-            actual_values = actual["Data"]["Table Layout"][()]
-            expected_values = expected["Data"]["Table Layout"][()]
+            actual_values = actual[group][data_set][()]
+            expected_values = expected[group][data_set][()]
             for a, e, in zip(actual_values, expected_values):
                 for a_item, e_item in zip(a, e):
                     if not isnan(a_item) and not isnan(e_item):
@@ -108,15 +83,5 @@ class TestHdf5(unittest.TestCase):
             input_file.copy(key, output_file)
         input_file.close()
         output_file.close()
-
-    def _compare_csv_files(self, input_path: str, expected_file_path: str):
-        with open(input_path, "r") as actual, open(expected_file_path, "r") as expected:
-            for a_line, e_line, in zip(actual.readlines(), expected.readlines()):
-                for a_item, e_item in zip(a_line.split(","), e_line.split(",")):
-                    a_item = float(a_item)
-                    e_item = float(e_item)
-                    if not isnan(a_item) and not isnan(e_item):
-                        assert isclose(a_item, e_item, rel_tol=1e-12, abs_tol=1e-12), \
-                        f"Values in record do not match. Actual: {a_line} Expected: {e_line}"
 
     
