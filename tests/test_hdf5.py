@@ -58,7 +58,7 @@ class TestHdf5(unittest.TestCase):
                     output_file_name = Path(input_file_path).stem + "_aacgm.hdf5"
                     expected_output_file_path = os.path.join(self.output_dir, output_file_name)
 
-                    result = self.run_tool([input_file_path, temp_output_dir, "-h5"])
+                    result = self.run_tool([input_file_path, temp_output_dir, "-r"])
                     assert result.exit_code == 0, f"CLI failed: {result.output}"
 
                     actual_output_file_path = os.path.join(temp_output_dir, output_file_name)

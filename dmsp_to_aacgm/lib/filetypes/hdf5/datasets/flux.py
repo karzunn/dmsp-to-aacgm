@@ -42,7 +42,7 @@ class FluxHdf5(DataSet):
                 previous_date = timestamp
                 yield timestamp, mlat, mlon, mlt
 
-    def convert(self, output_path: Optional[str] = None):
+    def _full_conversion(self, output_path: Optional[str] = None):
         data = self.hdf5_file["Data"]["Table Layout"][()]
         aacgm_data = self.get_aacgm_data()
 

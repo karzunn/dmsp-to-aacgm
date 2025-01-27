@@ -19,9 +19,10 @@ To add support for additional files, please reach out to offillcarson@gmail.com,
 
 ## Command-line Usage
 
-```dmsp-to-aacgm <input file/directory> [<output directory>]```
+```dmsp-to-aacgm <input file/directory> [<output directory>] [--reduced]```
 
 If the output directory is not specified, or the output directory is the same as the input directory, the input files will be modified.
+Specifying the --reduced flag will output an h5 file containing only time and aacgm data.
 
 ### Examples
 
@@ -31,7 +32,7 @@ If the output directory is not specified, or the output directory is the same as
 | `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions` | Convert a single file, output to `aacgm_conversions` |
 | `dmsp-to-aacgm dmsp_data`                         | Convert all files in `dmsp_data`                     |
 | `dmsp-to-aacgm dmsp_data aacgm_conversions`       | Convert all files in `dmsp_data`, output to `aacgm_conversions` |
-| `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions -h5` | Create an h5 file containing time and aacgm data only, output to `aacgm_conversions` |
+| `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions --reduced` | Create an h5 file containing time and aacgm data only, output to `aacgm_conversions` |
 
 ## Usage in Python
 
@@ -50,7 +51,7 @@ data_set.close()
 
 # Create an h5 file containing only time and aacgm data in the "aacgm_conversions" directory
 data_set = get_dataset("dms_20150410_16s1.001.hdf5")
-data_set.minimal_h5_file(file_name="aacgm_h5_file", output_dir="aacgm_conversions")
+data_set.convert(output_path="aacgm_conversions/aacgm_only_file.hdf5", minimal=True)
 data_set.close()
 ```
 

@@ -24,11 +24,11 @@ from .lib.utils import get_files
     metavar="<output dir>"
 )
 @click.option(
-    "-h5",
+    "-r", "--reduced",
     is_flag=True,
     help="Create a h5 file with time and AACGM coordinates only"
 )
-def cli(input_path, output_dir, h5):
+def cli(input_path, output_dir, reduced):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
 
@@ -37,9 +37,10 @@ def cli(input_path, output_dir, h5):
         try:
             data_set = dataset_factory(file_path)
 
-            if h5:
-                file_name = Path(file_path).stem + "_aacgm"
-                data_set.minimal_h5_file(file_name, output_dir)
+            if reduced:
+                file_name = Path(file_path).stem + "_aacgm.hdf5"
+                output_path = os.path.join(output_dir or "", file_name)
+                data_set.convert(output_path, minimal=True)
             else:
                 output_path = None
                 if output_dir:
