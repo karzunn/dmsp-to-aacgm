@@ -31,12 +31,12 @@ If the output directory is not specified, or the output directory is the same as
 | `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions` | Convert a single file, output to `aacgm_conversions` |
 | `dmsp-to-aacgm dmsp_data`                         | Convert all files in `dmsp_data`                     |
 | `dmsp-to-aacgm dmsp_data aacgm_conversions`       | Convert all files in `dmsp_data`, output to `aacgm_conversions` |
-| `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions -h5` | Create an h5 file containing time and aacgm data, output to `aacgm_conversions` |
+| `dmsp-to-aacgm dms_20150410_16s1.001.hdf5 aacgm_conversions -h5` | Create an h5 file containing time and aacgm data only, output to `aacgm_conversions` |
 
 ## Usage in Python
 
 ```python
-from dmsp_to_aacgm import get_dataset, build_h5
+from dmsp_to_aacgm import get_dataset, minimal_h5_file
 
 # Convert a file
 data_set = get_dataset("dms_20150410_16s1.001.hdf5")
@@ -48,9 +48,9 @@ data_set = get_dataset("dms_20150410_16s1.001.hdf5", "aacgm_conversions/dms_2015
 data_set.convert()
 data_set.close()
 
-# Create a minimal aacgm h5 file in the current directory
+# Create an h5 file containing only time and aacgm data in the "aacgm_conversions" directory
 data_set = get_dataset("dms_20150410_16s1.001.hdf5")
-build_h5(data_set, file_name="aacgm_h5_file")
+minimal_h5_file(data_set, file_name="aacgm_h5_file", output_dir="aacgm_conversions")
 data_set.close()
 ```
 

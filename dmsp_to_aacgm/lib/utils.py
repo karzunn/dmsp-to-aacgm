@@ -39,7 +39,7 @@ def build_output_path(file_path: str, output_dir: str) -> str:
     return os.path.join(output_dir, filename)
 
 
-def build_h5(
+def minimal_h5_file(
         data_set: DataSet,
         file_name: str,
         output_dir: str = "",

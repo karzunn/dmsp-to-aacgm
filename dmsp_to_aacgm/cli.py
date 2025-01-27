@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import click
 from .lib.filetypes.factory import dataset_factory
-from .lib.utils import get_files, build_output_path, build_h5
+from .lib.utils import get_files, build_output_path, minimal_h5_file
 
 
 
@@ -41,7 +41,7 @@ def cli(input_path, output_dir, h5):
             if h5:
                 data_set = dataset_factory(file_path)
                 file_name = Path(file_path).stem + "_aacgm"
-                build_h5(data_set, file_name, output_dir)
+                minimal_h5_file(data_set, file_name, output_dir)
             else:
                 output_path = build_output_path(file_path, output_dir)
                 data_set = dataset_factory(file_path, output_path)
